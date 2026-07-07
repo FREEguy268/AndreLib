@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdreLib - Library Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="dark-theme min-h-screen font-sans">
+    <!-- LOGIN PAGE -->
+    <div id="login-page" class="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-sky-950">
+        <div class="max-w-md w-full mx-4">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-sky-500 text-white rounded-2xl text-4xl mb-4 shadow-lg">
+                    📚
+                </div>
+                <h1 class="text-5xl font-bold tracking-tight text-white">AdreLib</h1>
+                <p class="text-slate-400 mt-2">Advanced Library System</p>
+            </div>
+            
+            <div class="bg-slate-800/70 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-slate-700">
+                <!-- Login Tabs -->
+                <div class="flex mb-6 border-b border-slate-700">
+                    <button onclick="switchLoginTab(0)" id="login-tab-0" class="flex-1 py-3 text-center border-b-2 border-sky-500 text-sky-400 font-medium">Student Login</button>
+                    <button onclick="switchLoginTab(1)" id="login-tab-1" class="flex-1 py-3 text-center text-slate-400 hover:text-slate-200">Director Signup/Login</button>
+                </div>
+
+                <!-- Student Login -->
+                <div id="student-login-form">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Student ID (12 digits)</label>
+                        <input id="login-student-id" type="text" maxlength="12"
+                               class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-sky-500 transition-colors text-white placeholder-slate-500"
+                               placeholder="123456789012">
+                    </div>
+                    
+                    <button onclick="handleStudentLogin()" 
+                            class="w-full bg-sky-500 hover:bg-sky-600 transition-colors text-white font-semibold py-4 rounded-2xl text-lg shadow-lg shadow-sky-500/30">
+                        Sign In as Student
+                    </button>
+                </div>
+
+                <!-- Director Form -->
+                <div id="director-login-form" class="hidden">
+                    <div class="grid grid-cols-1 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Full Name</label>
+                            <input id="director-name" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-sky-500 transition-colors text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Email</label>
+                            <input id="director-email" type="email" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-sky-500 transition-colors text-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Phone Number (+250...)</label>
+                            <input id="director-phone" type="tel" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-sky-500 transition-colors text-white" placeholder="+250788123456">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Password</label>
+                            <input id="director-password" type="password" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4 focus:outline-none focus:border-sky-500 transition-colors text-white">
+                        </div>
+                    </div>
+                    
+                    <button onclick="registerOrLoginDirector()" 
+                            class="mt-8 w-full bg-emerald-500 hover:bg-emerald-600 transition-colors text-white font-semibold py-4 rounded-2xl text-lg">
+                        Register / Login as Director
+                    </button>
+                </div>
+
+                <div class="mt-6 text-center text-xs text-slate-400">
+                    New students can <button onclick="showRegisterModal()" class="text-sky-400 hover:underline">create account here</button>
+                </div>
+            </div>
+            
+            <p class="text-center text-slate-500 text-xs mt-8">© 2026 AdreLib • All Rights Reserved</p>
+        </div>
+    </div>
+
+    <!-- STUDENT REGISTRATION MODAL -->
+    <div id="register-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="bg-slate-800 rounded-3xl p-8 max-w-lg w-full mx-4">
+            <h3 class="text-2xl font-semibold mb-6">Create Student Account</h3>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-1">Full Name</label>
+                    <input id="reg-name" type="text" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-1">Student ID (12 digits)</label>
+                    <input id="reg-id" type="text" maxlength="12" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4">
+                </div>
+                
+                <!-- Level Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-400 mb-2">Level</label>
+                    <div class="flex gap-3">
+                        <button onclick="selectLevel(0)" id="level-o" 
+                                class="flex-1 py-4 rounded-2xl border-2 border-slate-600 hover:border-sky-500">Ordinary Level (O'Level)</button>
+                        <button onclick="selectLevel(1)" id="level-a" 
+                                class="flex-1 py-4 rounded-2xl border-2 border-slate-600 hover:border-sky-500">Advanced Level (A'Level)</button>
+                    </div>
+                </div>
+                
+                <!-- O'Level Fields -->
+                <div id="olevel-fields" class="hidden">
+                    <label class="block text-sm font-medium text-slate-400 mb-1">Class (S1, S2, S3)</label>
+                    <input id="reg-olevel-class" type="text" placeholder="e.g. S2" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4">
+                </div>
+                
+                <!-- A'Level Fields -->
+                <div id="alevel-fields" class="hidden">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">Class (S4-S6)</label>
+                            <input id="reg-alevel-class" type="text" placeholder="e.g. S6" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-400 mb-1">REB Combination</label>
+                            <input id="reg-combination" type="text" placeholder="e.g. PCM" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-5 py-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 mt-8">
+                <button onclick="hideRegisterModal()" class="flex-1 py-4 rounded-2xl border border-slate-600">Cancel</button>
+                <button onclick="registerStudent()" class="flex-1 py-4 bg-sky-500 rounded-2xl text-white">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP (rest remains the same) -->
+    <div id="main-app" class="hidden">
+        <!-- [Full main app content - unchanged from previous version] -->
+        <!-- NAVBAR, Director Dashboard, Student Dashboard, Add Book Modal, etc. -->
+        <!-- (Copy from your previous index.html if needed) -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
