@@ -329,5 +329,14 @@ document.addEventListener('keydown', function(e) {
 window.onload = function() {
     switchLoginTab(0);
 };
-
+function showMainApp() {
+    document.getElementById("login-page").classList.add("hidden");
+    document.getElementById("main-app").classList.remove("hidden");
+    
+    if (currentUser.role === "director") {
+        renderDirectorDashboard();
+    } else {
+        renderStudentDashboard();
+    }
+}
 console.log("%cAdreLib initialized successfully. Dark + Sky Blue theme active.", "color: #0ea5e9; font-family: monospace");
