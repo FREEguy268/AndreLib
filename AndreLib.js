@@ -1,88 +1,87 @@
-// Data Storage
+// Data
 let students = [];
 let books = [
     { code: "BIO-3921", title: "Biology for Advanced Level", available: true },
-    { code: "ENG-1104", title: "English Literature Anthology", available: true }
+    { code: "ENG-1104", title: "English Literature Anthology", available: true },
+    { code: "MAT-7845", title: "Pure Mathematics", available: true }
 ];
 let borrowings = [];
 let currentUser = null;
 let currentLevel = 0;
 
-// Login Tab Switch
-function switchLoginTab(n) {
-    if (n === 0) {
-        document.getElementById("student-login-form").classList.remove("hidden");
-        document.getElementById("director-login-form").classList.add("hidden");
-    } else {
-        document.getElementById("student-login-form").classList.add("hidden");
-        document.getElementById("director-login-form").classList.remove("hidden");
-    }
-}
+// ... (keep all previous functions: switchLoginTab, handleStudentLogin, registerOrLoginDirector, showMainApp, etc.)
 
-// Student Login
-function handleStudentLogin() {
-    const id = document.getElementById("login-student-id").value.trim();
-    if (id.length !== 12) {
-        alert("Student ID must be 12 digits.");
-        return;
-    }
-    const student = students.find(s => s.id === id);
-    if (student) {
-        currentUser = { role: "student", ...student };
-        showMainApp();
-    } else {
-        alert("Student not found. Register first.");
-    }
-}
-
-// Director Login
-function registerOrLoginDirector() {
-    const name = document.getElementById("director-name").value.trim();
-    const phone = document.getElementById("director-phone").value.trim();
-    if (!name || !phone) {
-        alert("Name and phone are required.");
-        return;
-    }
-    if (confirm("Use code DIR-2026")) {
-        currentUser = { role: "director", name: name };
-        showMainApp();
-    }
-}
-
-// Show Main App
-function showMainApp() {
-    document.getElementById("login-page").classList.add("hidden");
-    document.getElementById("main-app").classList.remove("hidden");
+// Render Director Dashboard with Borrowing
+function renderDirectorDashboard() {
+    document.getElementById("director-dashboard").classList.remove("hidden");
+    document.getElementById("student-dashboard").classList.add("hidden");
     
-    if (currentUser.role === "director") {
-        renderDirectorDashboard();
-    } else {
+    // Render books with borrow buttons
+    let html = `<h2 class="text-2xl font-bold mb-6">Available Books</h2>`;
+    html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+    books.forEach(book => {
+        html += `
+            <div class="bg-slate-800 p-6 rounded-3xl">
+                <p class="font-mono text-sky-400">${book.code}</p>
+                <p class="text-lg font-medium">${book.title}</p>
+                <span class="${book.available ? 'text-emerald-400' : 'text-red-400'}">
+                    ${book.available ? 'Available' : 'Borrowed'}
+                </span>
+            </div>`;
+    });
+    html += `</div>`;
+    document.getElementById("director-content").innerHTML = html;
+}
+
+// Student Dashboard with Borrow Option
+function renderStudentDashboard() {
+    document.getElementById("student-dashboard").classList.remove("hidden");
+    document.getElementById("director-dashboard").classList.add("hidden");
+    
+    let html = `<h3 class="text-xl mb-4">Available Books to Borrow</h3>`;
+    books.forEach(book => {
+        if (book.available) {
+            html += `
+                <div class="bg-slate-800 p-5 rounded-2xl mb-4 flex justify-between items-center">
+                    <div>
+                        <p>${book.title}</p>
+                        <p class="text-xs text-slate-400">${book.code}</p>
+                    </div>
+                    <button onclick="borrowBook('${book.code}')" class="bg-sky-500 px-6 py-2 rounded-xl text-sm">Borrow</button>
+                </div>`;
+        }
+    });
+    document.getElementById("student-borrowed-books").innerHTML = html;
+}
+
+// Borrow Book Function
+function borrowBook(code) {
+    const book = books.find(b => b.code === code);
+    if (book && book.available) {
+        book.available = false;
+        borrowings.push({
+            studentId: currentUser.id,
+            bookCode: code,
+            date: new Date().toISOString().split('T')[0]
+        });
+        currentUser.borrowed = currentUser.borrowed || [];
+        currentUser.borrowed.push(code);
+        
+        alert(`✅ You borrowed "${book.title}"`);
         renderStudentDashboard();
     }
 }
 
-function renderDirectorDashboard() {
-    document.getElementById("director-dashboard").classList.remove("hidden");
-    // Add your full dashboard rendering code here
-    console.log("Director dashboard loaded");
-}
-
-function renderStudentDashboard() {
-    document.getElementById("student-dashboard").classList.remove("hidden");
-    console.log("Student dashboard loaded");
-}
-
-// Other functions (registerStudent, etc.)...
-function showRegisterModal() {
-    alert("Registration modal would open here - implement as needed.");
-}
-
-function logout() {
-    location.reload();
+// Return Book
+function returnBook(code) {
+    const book = books.find(b => b.code === code);
+    if (book) book.available = true;
+    alert("Book returned successfully.");
+    renderStudentDashboard();
 }
 
 // Initialize
-window.onload = function() {
+window.onload = () => {
     switchLoginTab(0);
-    console.log("%cAdreLib loaded successfully", "color: #0ea5e9");
+    console.log("%cAdreLib - Borrowing System Active", "color: #0ea5e9");
 };
