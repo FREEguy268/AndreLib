@@ -1,0 +1,21 @@
+:root {
+    --sky-blue: #0ea5e9;
+}
+
+.dark-theme {
+    background-color: #0f172a;
+    color: #e2e8f0;
+}
+
+.card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+}
+
+.tab-btn {
+    transition: all 0.2s;
+}
