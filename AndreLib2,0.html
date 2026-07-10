@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AndreLib</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Andre Library System</h1>
+        <div id="registration">
+            <h2>Student Registration</h2>
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="text" id="studentId" placeholder="12-digit ID (starts with 11)" required>
+            <select id="classSelection">
+                <option value="O'Level 1">O'Level 1</option>
+                <option value="O'Level 2">O'Level 2</option>
+                <option value="O'Level 3">O'Level 3</option>
+                <option value="A'Level 1">A'Level 1</option>
+                <option value="A'Level 2">A'Level 2</option>
+                <option value="A'Level 3">A'Level 3</option>
+                <option value="REB Combination">REB Combination</option>
+            </select>
+            <button onclick="registerStudent()">Register</button>
+        </div>
+        <div id="directorAccess">
+            <h2>Director Access</h2>
+            <input type="text" id="bookCode" placeholder="Book Code" required>
+            <input type="text" id="bookTitle" placeholder="Book Title" required>
+            <button onclick="addBook()">Add Book</button>
+        </div>
+        <div id="output"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
